@@ -1,60 +1,5 @@
-enum Transmission {
-    Auto,
-    Mechanical,
-}
-
-struct CarModel {
-    name: String,
-    color: (u8, u8, u8),
-    transmission: Transmission,
-}
-
-enum Cars {
-    Volkswagen(CarModel),
-    Ford(CarModel),
-    Honda(String),
-    Nissan(String),
-    Toyota(String),
-    MercedesBenz { name: String },
-    Bmw { name: String, color: (u8, u8, u8) },
-}
-
-impl Cars {
-    fn get_model(&self) -> &str {
-        match self {
-            Self::Volkswagen(model) => &model.name,
-            Self::Ford(model) => &model.name,
-            Self::MercedesBenz { name } => name,
-            Self::Bmw { name, color: _ } => name,
-            Self::Honda(name) | Self::Nissan(name) | Self::Toyota(name) => name,
-        }
-    }
-
-    fn get_color(&self) -> (u8, u8, u8) {
-        match self {
-            Self::Volkswagen(model) => model.color,
-            Self::Ford(model) => model.color,
-            Self::Bmw { name: _, color } => *color,
-            Self::Honda(_) | Self::Nissan(_) | Self::Toyota(_) | Self::MercedesBenz { .. } => {
-                (255, 255, 255)
-            }
-        }
-    }
-
-    fn get_transmission(&self) -> &str {
-        match self {
-            Self::Ford(model) | Self::Volkswagen(model) => match model.transmission {
-                Transmission::Auto => "auto",
-                Transmission::Mechanical => "mechanical",
-            },
-            Self::Honda(_)
-            | Self::Nissan(_)
-            | Self::Toyota(_)
-            | Self::Bmw { .. }
-            | Self::MercedesBenz { .. } => "auto",
-        }
-    }
-}
+mod enginery;
+use enginery::{CarModel, Cars, Transmission};
 
 fn main() {
     let volkswagen = Cars::Volkswagen(CarModel {
@@ -80,31 +25,11 @@ fn main() {
         name: String::from("Vito"),
     };
 
-    // volkswagen
-    info_car(&volkswagen);
-    // ford
-    info_car(&ford);
-    // honda
-    info_car(&honda);
-    // toyota
-    info_car(&toyota);
-    // nissan
-    info_car(&nissan);
-    // bmw
-    info_car(&bmw);
-    // mercedes_benz
-    info_car(&mercedes_benz);
-}
-
-fn info_car(car: &Cars) {
-    let car_name = car.get_model();
-    let car_color = car.get_color();
-    let car_transmission = car.get_transmission();
-
-    println!("Car model:");
-    println!("*****************");
-    println!("Name -> {car_name}");
-    println!("Color -> {car_color:?}");
-    println!("Transmission -> {car_transmission}");
-    println!("*****************");
+    volkswagen.get_info();
+    ford.get_info();
+    honda.get_info();
+    toyota.get_info();
+    nissan.get_info();
+    bmw.get_info();
+    mercedes_benz.get_info();
 }
